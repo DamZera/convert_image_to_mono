@@ -66,6 +66,6 @@ int main(int argc, char *argv[]){
 		cv::imwrite("resize.jpeg", result);
 
 	} else {
-		std::cout << "Use " << argv[0] << " filename.jpg " << "width_result" << "height_result" << std::endl;
+		std::cout << "Use " << argv[0] << " filename.jpg " << "width_result " << "height_result" << std::endl;
 	}
 }
