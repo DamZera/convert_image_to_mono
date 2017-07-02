@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
 		cv::Mat result;
 		result.create(w, l, CV_8UC2);
 
-		resize(mat, result, result.size(), 0, 0, cv::INTER_LINEAR);
+		resize(mat, result, result.size(), 0, 0, cv::INTER_LANCZOS4);
 		
 		uint8_t currval = 0;
 		int rowcount = 0;
@@ -27,10 +27,12 @@ int main(int argc, char *argv[]){
 		int tmp;
 		std::cout << "#include <avr/pgmspace.h>" << std::endl << std::endl;
 		std::cout << "const uint8_t name[] PROGMEM = { " << std::endl;
+
+
+		// Parse matrix for arduino
 		while(col < result.cols){
 			tmp = row;
 			currval = 0;
-			//std::cout << col << ":" <<std::endl;
 		    for(int j = 0, row = tmp-8; j < 8 && row < result.rows; j++, row++){
 		    	
 		    	if(rowcount == 16) {
@@ -38,6 +40,8 @@ int main(int argc, char *argv[]){
 		    		rowcount = 0;
 		    	}
 
+
+		    	// Binarize matrix and compute currval
 		        if (result.at<unsigned char>(row,col) < SEUIL){
 		        	result.at<unsigned char>(row,col) = 0;
 		        	currval += pow(2, j);
@@ -45,24 +49,24 @@ int main(int argc, char *argv[]){
 		        	result.at<unsigned char>(row,col) = 255;
 		        }
 
-		        if(j == 7){
+		        // 0xFF print value when 8 pixel collected
+		        if(j == 7 || row == result.rows-1){
 #if DEBUG
 		    		std::cout << " (" << static_cast<unsigned int>(currval) << ") ";
 #endif
 		    		std::cout << std::hex << "0x" << std::setfill('0') << std::setw(2) << static_cast<unsigned int>(currval) << ", ";
 					rowcount++;
 		    	}
-
-		        //std::cout << row << " ";
 		    }
 		    col ++;
-		    if(row < result.rows+8 && col == result.cols){
+		    if(row < result.rows && col == result.cols){
 		    	col = 0;
 		    	row += 8;
 		    }
 		}
 		std::cout << "};" << std::endl;
 
+		// Write image resize
 		cv::imwrite("resize.jpeg", result);
 
 	} else {
