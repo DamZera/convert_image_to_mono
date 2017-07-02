@@ -14,8 +14,6 @@ int main(int argc, char *argv[]){
 		int w = std::strtol(argv[2], NULL, 10);
 		int l = std::strtol(argv[3], NULL, 10);
 
-
-
 		cv::Mat result;
 		result.create(w, l, CV_8UC2);
 
@@ -28,7 +26,6 @@ int main(int argc, char *argv[]){
 		std::cout << "#include <avr/pgmspace.h>" << std::endl << std::endl;
 		std::cout << "const uint8_t name[] PROGMEM = { " << std::endl;
 
-
 		// Parse matrix for arduino
 		while(col < result.cols){
 			tmp = row;
@@ -39,7 +36,6 @@ int main(int argc, char *argv[]){
 		    		std::cout << std::endl;
 		    		rowcount = 0;
 		    	}
-
 
 		    	// Binarize matrix and compute currval
 		        if (result.at<unsigned char>(row,col) < SEUIL){
